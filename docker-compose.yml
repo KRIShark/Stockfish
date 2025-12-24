@@ -1,0 +1,11 @@
+services:
+  stockfish-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        ARCH: x86-64-modern
+    image: stockfish-cli:latest
+    container_name: stockfish-engine
+    tty: true
+    stdin_open: true
