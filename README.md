@@ -104,6 +104,40 @@ Detailed compilation instructions for all platforms can be found in our
 [documentation][wiki-compile-link]. Our wiki also has information about
 the [UCI commands][wiki-uci-link] supported by Stockfish.
 
+
+## Docker CLI service
+
+Stockfish can also be built and hosted as a CLI service with the provided
+`Dockerfile` and `docker-compose.yml`. The single service keeps a container
+named `stockfish-engine` alive so you can `docker exec` into the UCI CLI
+without restarting the engine every time.
+
+1. `docker compose up --build -d`
+2. Verify the container is running via `docker compose ps`.
+3. `docker exec -it stockfish-engine stockfish` to reach the UCI prompt.
+
+Stop the service with `docker compose down`.
+
+## Python client for predictions
+
+The `python_client/client.py` script uses `docker exec` to run Stockfish and
+returns the predicted next best move plus evaluation information for any
+supported position:
+
+```
+python python_client/client.py --fen "startpos" --depth 12
+```
+
+Smoke tests connect to the same container once it is up:
+
+```
+python -m unittest python_client.test_client
+```
+
+Override the image architecture with `docker compose build --build-arg ARCH=x86-64-avx2`
+or the container by passing `--container-name` to the client.
+
+
 ## Terms of use
 
 Stockfish is free and distributed under the
